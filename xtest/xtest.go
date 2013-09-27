@@ -51,6 +51,13 @@ func XCloseDisplay(disp *C.Display) {
 	C.XCloseDisplay(disp);
 }
 
+func XGetScreen(disp *C.Display) C.int {
+	theScreen := C.XDefaultScreen(disp)
+	C.XSync(disp, C.int(1))
+	return theScreen;
+}
+
+
 func PressMouseButton(disp *C.Display, button int) C.int {
 	retval := C.XTestFakeButtonEvent(disp, C.uint(button), C.int(1), C.ulong(1))
 	return retval;
@@ -59,3 +66,36 @@ func ReleaseMouseButton(disp *C.Display, button int) C.int {
 	retval := C.XTestFakeButtonEvent(disp, C.uint(button), C.int(0), C.ulong(1))
 	return retval;
 }
+
+func MoveMouseAbs(disp *C.Display, screen C.int, x, y int) bool {
+ 	if (screen >= 0 && screen < C.XScreenCount(disp)) {
+ 		/* I decided not to set our error handler, since the
+		 window must exist. */
+ 		C.XWarpPointer(disp, C.None,
+ 			C.XRootWindow(disp, screen),
+ 			     0, 0, 0, 0,
+ 			C.int(x), C.int(y));
+ 		C.XSync(disp, C.int(0));
+		return true;
+ 	} 
+	return false;
+}
+
+func Usleep(usec int) {
+	C.usleep(C.__useconds_t(usec))
+}
+
+// static Display *TheXDisplay = NULL;
+// TheXDisplay = XOpenDisplay(NULL);
+// 
+// /* Function: CloseXDisplay
+//  * Description: Closes our connection to the X server's display
+//  */
+// static void CloseXDisplay(void)
+// {
+// 	if (TheXDisplay) {
+// 		XSync(TheXDisplay, False);
+// 		XCloseDisplay(TheXDisplay);
+// 		TheXDisplay = NULL;
+// 	}
+// }
