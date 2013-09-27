@@ -116,9 +116,9 @@ func Usleep(usec int) {
 // 	}
 // }
 type Color struct { 
-    red uint
-    green uint
-    blue uint
+    Red uint
+    Green uint
+    Blue uint
 }
 func GetPixelColor (d * C.Display, x, y int) Color {
 	red := C.uint(0)
