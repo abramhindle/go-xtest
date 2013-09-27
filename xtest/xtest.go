@@ -21,7 +21,7 @@
 
 package xtest
 
-// #cgo pkg-config: x11
+// #cgo pkg-config: x11 xtst
 // #include <stdlib.h>
 // #include <string.h>
 // #include <unistd.h>
@@ -51,3 +51,11 @@ func XCloseDisplay(disp *C.Display) {
 	C.XCloseDisplay(disp);
 }
 
+func PressMouseButton(disp *C.Display, button int) C.int {
+	retval := C.XTestFakeButtonEvent(disp, C.uint(button), C.int(1), C.ulong(1))
+	return retval;
+}
+func ReleaseMouseButton(disp *C.Display, button int) C.int {
+	retval := C.XTestFakeButtonEvent(disp, C.uint(button), C.int(0), C.ulong(1))
+	return retval;
+}
