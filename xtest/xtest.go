@@ -21,18 +21,34 @@
 
 package xtest
 
-// #cgo pkg-config: x11 xtst
-// #include <stdlib.h>
-// #include <string.h>
-// #include <unistd.h>
-// #include <X11/Xlib.h>
-// #include <X11/Xutil.h>
-// #include <X11/Xatom.h>
-// #include <X11/Xlocale.h>
-// #include <X11/Intrinsic.h>
-// #include <X11/StringDefs.h>
-// #include <X11/keysym.h>
-// #include <X11/extensions/XTest.h>
+/*
+#cgo pkg-config: x11 xtst
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/Xatom.h>
+#include <X11/Xlocale.h>
+#include <X11/Intrinsic.h>
+#include <X11/StringDefs.h>
+#include <X11/keysym.h>
+#include <X11/extensions/XTest.h>
+
+// http://rosettacode.org/wiki/Color_of_a_screen_pixel
+void get_pixel_color (Display *d, int x, int y, unsigned int * red, unsigned int * green, unsigned int * blue) {
+  XColor color;
+  XImage *image;
+  image = XGetImage (d, RootWindow (d, DefaultScreen (d)), x, y, 1, 1, AllPlanes, XYPixmap);
+  color.pixel = XGetPixel (image, 0, 0);
+  XFree (image);
+  XQueryColor (d, DefaultColormap(d, DefaultScreen (d)), &color);
+  *red  = color.red;
+  *green = color.red;
+  *blue  = color.red;
+}
+ 
+*/
 import "C"
 
 import (
@@ -99,3 +115,16 @@ func Usleep(usec int) {
 // 		TheXDisplay = NULL;
 // 	}
 // }
+type Color struct { 
+    red uint
+    green uint
+    blue uint
+}
+func GetPixelColor (d * C.Display, x, y int) Color {
+	red := C.uint(0)
+	green := C.uint(0)
+	blue := C.uint(0)
+	C.get_pixel_color(d, C.int(x), C.int(y), &red, &green, &blue)
+	return Color{uint(red),uint(green),uint(blue)};
+}
+ 
