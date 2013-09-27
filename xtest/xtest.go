@@ -21,7 +21,10 @@
 
 package xtest
 
-
+// #cgo pkg-config: x11
+// #include <stdlib.h>
+// #include <string.h>
+// #include <unistd.h>
 // #include <X11/Xlib.h>
 // #include <X11/Xutil.h>
 // #include <X11/Xatom.h>
@@ -30,11 +33,8 @@ package xtest
 // #include <X11/StringDefs.h>
 // #include <X11/keysym.h>
 // #include <X11/extensions/XTest.h>
-
-// #cgo LDFLAGS:  -lX11 
-
-
 import "C"
+
 import (
 	//"errors"
 	//"unsafe"
